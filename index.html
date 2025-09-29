@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI行程助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'AR YuanGB Heavy', 'Microsoft JhengHei', sans-serif;
+        }
+        
+        /* 主体背景样式 - 固定浅粉加蓝色 */
+        body {
+            background: linear-gradient(135deg, #e6f0ff, #ffe6f2);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 容器样式 - 内容居中显示 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+        
+        /* 头部导航栏样式 */
+        header {
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* Logo容器样式 */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        /* Logo样式 */
+        .logo {
+            width: 50px;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Logo图片样式 */
+        .logo img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        /* Logo文字样式 */
+        .logo-text {
+            color: #1a2a6c;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        /* AI文字高亮样式 */
+        .ai-text {
+            color: #e91e63;
+            font-weight: 800;
+        }
+        
+        /* 导航菜单样式 */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        /* 导航链接样式 */
+        nav a {
+            color: #1a2a6c;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 18px;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+        
+        /* 导航链接悬停效果 */
+        nav a:hover {
+            background: rgba(26, 42, 108, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* 外部链接图标样式 */
+        .external-link {
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        /* 主内容区域样式 */
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 0 80px;
+        }
+        
+        /* 主标题样式 */
+        .hero h1 {
+            font-size: 3.5rem;
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+        
+        /* 副标题样式 */
+        .hero p {
+            font-size: 1.3rem;
+            color: #555;
+            max-width: 700px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+        
+        /* 搜索容器样式 */
+        .search-container {
+            width: 100%;
+            max-width: 700px;
+            position: relative;
+        }
+        
+        /* 搜索框样式 */
+        .search-box {
+            width: 100%;
+            padding: 20px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            font-family: 'AR YuanGB Heavy', 'Microsoft JhengHei', sans-serif;
+        }
+        
+        /* 搜索框聚焦效果 */
+        .search-box:focus {
+            box-shadow: 0 15px 40px rgba(26, 42, 108, 0.2);
+            transform: translateY(-3px);
+            border-color: #1a2a6c;
+        }
+        
+        /* 搜索按钮样式 */
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-family: 'AR YuanGB Heavy', 'Microsoft JhengHei', sans-serif;
+        }
+        
+        /* 搜索按钮悬停效果 */
+        .search-btn:hover {
+            background: #0d1a4a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: rgba(26, 42, 108, 0.9);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        /* 页脚内容布局 */
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        /* 页脚Logo样式 */
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        /* 页脚图标样式 */
+        .footer-logo i {
+            font-size: 24px;
+            color: #ffdd00;
+        }
+        
+        /* 页脚链接样式 */
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        /* 页脚链接样式 */
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        
+        /* 页脚链接悬停效果 */
+        .footer-links a:hover {
+            color: #ffdd00;
+        }
+        
+        /* 版权信息样式 */
+        .copyright {
+            margin-top: 20px;
+            width: 100%;
+            font-size: 14px;
+            color: #ccc;
+            font-weight: 500;
+        }
+        
+        /* 响应式设计 - 平板设备 (768px - 1024px) */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+                max-width: 600px;
+            }
+        }
+        
+        /* 响应式设计 - 小型平板和大型手机 (600px - 768px) */
+        @media (max-width: 768px) {
+            /* 移动端头部布局 */
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            /* 移动端主标题大小 */
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            /* 移动端副标题大小 */
+            .hero p {
+                font-size: 1.1rem;
+                padding: 0 15px;
+            }
+            
+            /* 移动端搜索框调整 */
+            .search-box {
+                padding: 18px 20px;
+                font-size: 16px;
+            }
+            
+            .search-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            /* 移动端页脚布局 */
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+        
+        /* 响应式设计 - 手机设备 (480px - 600px) */
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .logo-container {
+                gap: 10px;
+            }
+            
+            .logo {
+                width: 50px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            nav a {
+                font-size: 16px;
+                padding: 6px 10px;
+            }
+            
+            .hero {
+                padding: 30px 0 60px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+                padding: 0 10px;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+                margin-bottom: 30px;
+            }
+            
+            .search-box {
+                padding: 16px 18px;
+                font-size: 15px;
+            }
+            
+            .search-btn {
+                padding: 9px 18px;
+                font-size: 13px;
+            }
+            
+            footer {
+                padding: 25px 0;
+                margin-top: 40px;
+            }
+        }
+        
+        /* 响应式设计 - 小型手机设备 (小于480px) */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 0.95rem;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .logo {
+                width: 50px;
+            }
+            
+            .logo-text {
+                font-size: 18px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            nav a {
+                font-size: 15px;
+            }
+            
+            .search-box {
+                padding: 14px 16px;
+            }
+            
+            .search-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面主体结构 -->
+    <div class="container">
+        <!-- 网站头部 -->
+        <header>
+            <!-- Logo区域 - 已删除跳转功能 -->
+            <div class="logo-container">
+                <div class="logo">
+                    <!-- 澳门科学馆官方Logo -->
+                    <img src="https://upload.wikimedia.org/wikipedia/zh/thumb/6/6c/Logo_do_Centro_de_Ci%C3%AAncia_de_Macau.png/250px-Logo_do_Centro_de_Ci%C3%AAncia_de_Macau.png" alt="澳門科學館Logo">
+                </div>
+                <div class="logo-text"> <span class="ai-text">AI行程助手</span></div>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav>
+                <ul>
+                    <li><a href="#home">首頁</a></li> <!-- 首页链接 -->
+                    <li><a href="#exhibits">展覽</a></li> <!-- 展览页面链接 -->
+                    <!-- 已删除行程规划链接 -->
+                    <li><a href="https://www.msc.org.mo/zh/mini-site/ystv/intro" target="_blank">關於我們 <i class="fas fa-external-link-alt external-link"></i></a></li> <!-- 关于我们链接 - 在新标签页中打开官网 -->
+                </ul>
+            </nav>
+        </header>
+        
+        <!-- 主内容区域 -->
+        <section class="hero" id="home">
+            <!-- 主标题 -->
+            <h1>探索科學，智遊澳門</h1>
+            <!-- 副标题 -->
+            <p>AI行程助手為您量身定制最佳方案</p>
+            
+            <!-- 搜索区域 -->
+            <div class="search-container">
+                <!-- 搜索输入框 -->
+                <input type="text" class="search-box" placeholder="請輸入您的需求">
+                <!-- 搜索按钮 -->
+                <button class="search-btn"><i class="fas fa-search"></i> AI智能規劃</button>
+            </div>
+        </section>
+    </div>
+    
+    <!-- 网站页脚 -->
+    <footer>
+        <div class="container">
+            <!-- 页脚主要内容 -->
+            <div class="footer-content">
+                <!-- 页脚Logo -->
+                <div>
+         <span</span>
+                </div>
+                
+                <!-- 页脚链接 -->
+                <div class="footer-links">
+                    <a href="#privacy">隱私政策</a> <!-- 隐私政策链接 -->
+                    <a href="#terms">使用條款</a> <!-- 使用条款链接 -->
+                    <a href="https://www.msc.org.mo/zh/mini-site/ystv/intro" target="_blank">聯繫我們 <i class="fas fa-external-link-alt external-link"></i></a> <!-- 联系我们链接 - 在新标签页中打开官网 -->
+                </div>
+            </div>
+            
+            <!-- 版权信息 -->
+            <div class="copyright">
+                &copy; | 澳門科學館 版權所有 |
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript功能实现 -->
+    <script>
+        // 搜索功能实现
+        document.querySelector('.search-btn').addEventListener('click', function() {
+            // 获取搜索框内容
+            const searchText = document.querySelector('.search-box').value;
+            
+            // 验证输入是否为空
+            if (searchText.trim() === '') {
+                alert('請輸入您的需求'); // 显示提示信息
+                return; // 停止执行
+            }
+            
+            // 显示加载状态
+            const originalText = this.innerHTML; // 保存原始按钮文本
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 規劃中...'; // 显示加载动画
+            this.disabled = true; // 禁用按钮防止重复点击
+            
+            // 模拟AI处理时间（实际应用中这里会调用AI API）
+            setTimeout(() => {
+                // 在实际应用中，这里会调用AI模型API并显示结果
+                alert(`已根據"${searchText}"為您生成個性化行程！\n\n在完整版本中，這裡將顯示詳細的AI推薦行程。`);
+                
+                // 恢复按钮状态
+                this.innerHTML = originalText; // 恢复原始文本
+                this.disabled = false; // 重新启用按钮
+            }, 2000); // 2秒延迟模拟AI处理
+        });
+        
+        // 按Enter键触发搜索功能
+        document.querySelector('.search-box').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { // 检测是否按下Enter键
+                document.querySelector('.search-btn').click(); // 触发搜索按钮点击事件
+            }
+        });
+    </script>
+</body>
+</html>
