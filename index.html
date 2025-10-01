@@ -16,8 +16,8 @@
         
         /* 主体背景样式 - 固定浅粉加蓝色 */
         body {
-            background: linear-gradient(135deg, #e6f0ff, #ffe6f2);
-            color: #333;
+            background: linear-gradient(135deg, #8ab7fa, #fad2e5);
+            color: rgb(180, 170, 170);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -57,7 +57,7 @@
         
         /* Logo图片样式 */
         .logo img {
-            width: 100%;
+            width: 80%;
             height: auto;
             object-fit: contain;
         }
@@ -71,7 +71,7 @@
         
         /* AI文字高亮样式 */
         .ai-text {
-            color: #e91e63;
+            color: #1a6099;
             font-weight: 800;
         }
         
@@ -419,8 +419,7 @@
             <nav>
                 <ul>
                     <li><a href="#home">首頁</a></li> <!-- 首页链接 -->
-                    <li><a href="#exhibits">展覽</a></li> <!-- 展览页面链接 -->
-                    <!-- 已删除行程规划链接 -->
+                    <li><a href="sousuo.html">行程規劃</a></li> <!-- 新增的链接 -->
                     <li><a href="https://www.msc.org.mo/zh/mini-site/ystv/intro" target="_blank">關於我們 <i class="fas fa-external-link-alt external-link"></i></a></li> <!-- 关于我们链接 - 在新标签页中打开官网 -->
                 </ul>
             </nav>
@@ -448,9 +447,9 @@
         <div class="container">
             <!-- 页脚主要内容 -->
             <div class="footer-content">
-                <!-- 页脚Logo -->
-                <div>
-         <span</span>
+                <div class="footer-logo">
+                    <i class="fas fa-microscope"></i>
+                    <span>澳門科學館 AI行程助手</span>
                 </div>
                 
                 <!-- 页脚链接 -->
@@ -463,7 +462,7 @@
             
             <!-- 版权信息 -->
             <div class="copyright">
-                &copy; | 澳門科學館 版權所有 |
+                &copy; 2023 澳門科學館 版權所有
             </div>
         </div>
     </footer>
@@ -481,26 +480,26 @@
                 return; // 停止执行
             }
             
-            // 显示加载状态
-            const originalText = this.innerHTML; // 保存原始按钮文本
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 規劃中...'; // 显示加载动画
-            this.disabled = true; // 禁用按钮防止重复点击
-            
-            // 模拟AI处理时间（实际应用中这里会调用AI API）
-            setTimeout(() => {
-                // 在实际应用中，这里会调用AI模型API并显示结果
-                alert(`已根據"${searchText}"為您生成個性化行程！\n\n在完整版本中，這裡將顯示詳細的AI推薦行程。`);
-                
-                // 恢复按钮状态
-                this.innerHTML = originalText; // 恢复原始文本
-                this.disabled = false; // 重新启用按钮
-            }, 2000); // 2秒延迟模拟AI处理
+            // 保存用户输入到localStorage，然后跳转到结果页面
+            localStorage.setItem('userQuery', searchText);
+            window.location.href = 'sousuo.html';
         });
         
         // 按Enter键触发搜索功能
         document.querySelector('.search-box').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') { // 检测是否按下Enter键
-                document.querySelector('.search-btn').click(); // 触发搜索按钮点击事件
+                // 获取搜索框内容
+                const searchText = this.value;
+                
+                // 验证输入是否为空
+                if (searchText.trim() === '') {
+                    alert('請輸入您的需求');
+                    return;
+                }
+                
+                // 保存用户输入到localStorage，然后跳转到结果页面
+                localStorage.setItem('userQuery', searchText);
+                window.location.href = 'sousuo.html';
             }
         });
     </script>
