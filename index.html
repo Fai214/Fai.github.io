@@ -31,7 +31,7 @@
             width: 100%;
         }
         
-        /* 头部导航栏样式 - 透明背景，滚动时添加模糊效果 */
+        /* 头部导航栏样式 - 修改为全宽 */
         header {
             padding: 20px 0;
             display: flex;
@@ -43,14 +43,29 @@
             z-index: 100;
             width: 100%;
             transition: all 0.4s ease;
+            /* 修改：添加内部容器控制内容宽度 */
         }
         
-        /* 滚动时的导航栏样式 */
+        /* 滚动时的导航栏样式 - 修改为全宽 */
         header.scrolled {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            /* 修改：移除左右边距，使用全宽 */
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        /* 新增：导航栏内部容器 */
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         
         /* Logo容器样式 */
@@ -513,6 +528,11 @@
                 gap: 20px;
             }
             
+            .header-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
             /* 移动端主标题大小 */
             .hero h1 {
                 font-size: 2.5rem;
@@ -696,10 +716,9 @@
     </style>
 </head>
 <body>
-    <!-- 页面主体结构 -->
-    <div class="container">
-        <!-- 网站头部 - 滚动时添加模糊效果 -->
-        <header id="main-header">
+    <!-- 网站头部 - 修改为独立于容器 -->
+    <header id="main-header">
+        <div class="header-container">
             <!-- Logo区域 -->
             <div class="logo-container">
                 <div class="logo">
@@ -717,8 +736,11 @@
                     <li><a href="#about-us-image">關於我們</a></li> <!-- 关于我们链接 - 指向图片容器 -->
                 </ul>
             </nav>
-        </header>
-        
+        </div>
+    </header>
+    
+    <!-- 页面主体结构 -->
+    <div class="container">
         <!-- 主内容区域 -->
         <section class="hero" id="home">
             <!-- 主标题 -->
@@ -731,12 +753,12 @@
                 <div class="search-box">
                     <div class="input-section">
                         <div class="input-group">
-                            <span class="input-label">起：</span>
+                            <span class="input-label">起點:</span>
                             <input type="text" class="input-field" placeholder="請輸入起點位置" id="start-input">
                         </div>
                         <div class="divider"></div>
                         <div class="input-group">
-                            <span class="input-label">終：</span>
+                            <span class="input-label">終點:</span>
                             <input type="text" class="input-field" placeholder="請輸入終點位置" id="end-input">
                         </div>
                     </div>
@@ -952,9 +974,12 @@
             });
         });
         
-        // 导航栏平滑滚动功能
-        document.querySelectorAll('nav a').forEach(link => {
+        // 导航栏平滑滚动功能 - 修复遮挡问题
+        document.querySelectorAll('nav a, .footer-links a').forEach(link => {
             link.addEventListener('click', function(e) {
+                // 检查是否是外部链接
+                if (this.getAttribute('target') === '_blank') return;
+                
                 e.preventDefault();
                 
                 // 获取目标元素
@@ -963,33 +988,14 @@
                 
                 if (targetElement) {
                     // 计算偏移量，考虑固定导航栏的高度
-                    const offset = 80;
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    const headerHeight = document.getElementById('main-header').offsetHeight;
+                    const offset = headerHeight + 20; // 额外增加20px的间距
                     
-                    // 平滑滚动到目标位置
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-        
-        // 页脚链接平滑滚动功能
-        document.querySelectorAll('.footer-links a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // 获取目标元素
-                const targetId = this.getAttribute('href').substring(1);
-                const targetElement = document.getElementById(targetId);
-                
-                if (targetElement) {
-                    // 计算偏移量，考虑固定导航栏的高度
-                    const offset = 80;
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    // 获取目标元素的位置
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    
+                    // 计算滚动位置，减去导航栏高度
+                    const offsetPosition = targetPosition - offset;
                     
                     // 平滑滚动到目标位置
                     window.scrollTo({
