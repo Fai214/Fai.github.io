@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Route Assistant</title>
+    <title>AI行程助手</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* 全局样式重置 */
@@ -396,6 +396,40 @@
             transform: rotate(180deg);
         }
         
+        /* 图片容器样式 */
+        .image-section {
+            padding: 60px 0;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .image-section h2 {
+            color: #1a2a6c;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+        
+        .image-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .image-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
         /* 页脚样式 */
         footer {
             background: rgba(26, 42, 108, 0.9);
@@ -579,7 +613,7 @@
                 font-size: 15px;
             }
             
-            .preset-trips h2, .faq-section h2 {
+            .preset-trips h2, .faq-section h2, .image-section h2 {
                 font-size: 1.8rem;
             }
             
@@ -680,7 +714,7 @@
                     <li><a href="#home">首頁</a></li> <!-- 首页链接 -->
                     <li><a href="#preset-trips">行程規劃</a></li> <!-- 行程规划链接 -->
                     <li><a href="#faq-section">常見問題</a></li> <!-- 常见问题链接 -->
-                    <li><a href="https://www.msc.org.mo/zh/mini-site/ystv/intro" target="_blank">關於我們 <i class="fas fa-external-link-alt external-link"></i></a></li> <!-- 关于我们链接 - 在新标签页中打开官网 -->
+                    <li><a href="#about-us-image">關於我們</a></li> <!-- 关于我们链接 - 指向图片容器 -->
                 </ul>
             </nav>
         </header>
@@ -698,12 +732,12 @@
                     <div class="input-section">
                         <div class="input-group">
                             <span class="input-label">起：</span>
-                            <input type="text" class="input-field" placeholder="請輸入起點位置" id="start-input" value=>
+                            <input type="text" class="input-field" placeholder="請輸入起點位置" id="start-input">
                         </div>
                         <div class="divider"></div>
                         <div class="input-group">
                             <span class="input-label">終：</span>
-                            <input type="text" class="input-field" placeholder="請輸入終點位置" id="end-input" value=>
+                            <input type="text" class="input-field" placeholder="請輸入終點位置" id="end-input">
                         </div>
                     </div>
                     <button class="search-btn">
@@ -804,6 +838,14 @@
                 </div>
             </div>
         </section>
+        
+        <!-- 图片容器区域 -->
+        <section class="image-section" id="about-us-image">
+            <h2>關於我們</h2>
+            <div class="image-container">
+                <img src="https://www.msc.org.mo/attachment/images/2024/03/20/image_1710918164_x000rz6I.jpg" alt="青年科技村活動照片">
+            </div>
+        </section>
     </div>
     
     <!-- 网站页脚 -->
@@ -815,7 +857,7 @@
                 <div class="footer-links">
                     <a href="#privacy">隱私政策</a> <!-- 隐私政策链接 -->
                     <a href="#terms">使用條款</a> <!-- 使用条款链接 -->
-                    <a href="https://www.msc.org.mo/zh/mini-site/ystv/intro" target="_blank">聯繫我們 <i class="fas fa-external-link-alt external-link"></i></a> <!-- 联系我们链接 - 在新标签页中打开官网 -->
+                    <a href="#about-us-image">關於我們</a> <!-- 关于我们链接 -->
                 </div>
             </div>
             
@@ -913,9 +955,30 @@
         // 导航栏平滑滚动功能
         document.querySelectorAll('nav a').forEach(link => {
             link.addEventListener('click', function(e) {
-                // 检查是否是外部链接
-                if (this.getAttribute('target') === '_blank') return;
+                e.preventDefault();
                 
+                // 获取目标元素
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    // 计算偏移量，考虑固定导航栏的高度
+                    const offset = 80;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - offset;
+                    
+                    // 平滑滚动到目标位置
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 页脚链接平滑滚动功能
+        document.querySelectorAll('.footer-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
                 e.preventDefault();
                 
                 // 获取目标元素
