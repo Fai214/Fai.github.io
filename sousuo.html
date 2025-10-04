@@ -14,7 +14,7 @@
         }
         
         body {
-            background: white;
+            background: rgb(255, 255, 255);
             color: #333;
             min-height: 100vh;
             display: flex;
@@ -41,7 +41,7 @@
         }
         
         .back-btn {
-            background: #1a2a6c;
+            background: #828388;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -383,43 +383,19 @@
             setTimeout(() => {
                 let aiResponse = '';
                 
-                if (userMessage.includes('3天') || userMessage.includes('三日')) {
-                    aiResponse = `根據您的3天澳門科學之旅需求，我已經為您優化了行程安排：
-
-<strong>優化後的行程重點：</strong>
-• 增加了更多互動體驗環節
-• 調整了參觀順序以避開高峰時段
-• 加入了本地特色科學景點
-
-您對這個調整滿意嗎？或者您有特定的科學領域想要重點關注？`;
-                } else if (userMessage.includes('家庭') || userMessage.includes('親子')) {
-                    aiResponse = `針對家庭親子科學體驗，我推薦以下活動：
-
-<strong>適合家庭的科學活動：</strong>
-• 兒童科學探索區：專為5-12歲兒童設計
-• 親子科學工作坊：共同完成簡單實驗
-• 趣味科學表演：寓教於樂的互動演出
-
-需要我為您規劃具體的親子行程嗎？`;
-                } else if (userMessage.includes('調整') || userMessage.includes('修改')) {
-                    aiResponse = `我已經根據您的要求調整了行程安排：
-
-<strong>調整內容：</strong>
-• 重新優化了時間分配
-• 增加了您感興趣的活動項目
-• 調整了參觀路線以提升體驗
-
-請告訴我您對這個調整是否滿意，或者還有其他需要修改的地方。`;
-                } else {
-                    aiResponse = `感謝您的訊息！作為AI行程助手，我可以為您：
-
-✅ 規劃個性化科學之旅
-✅ 推薦適合的展覽和活動
-✅ 安排最佳參觀時間
-✅ 提供實用貼士和建議
-
-請告訴我您的具體需求，我會為您量身定制最佳方案。`;
+                // 從用戶消息中提取起點和終點
+                let startPoint = "qidian";
+                let endPoint = "zhongdian";
+                
+                // 嘗試從消息中解析起點和終點
+                const match = userMessage.match(/從(.+)到(.+)的最佳路線/);
+                if (match && match.length >= 3) {
+                    startPoint = match[1];
+                    endPoint = match[2];
                 }
+                
+                // 直接回復起點和終點
+                aiResponse = `起點：${startPoint}<br>終點：${endPoint}`;
                 
                 addMessage(aiResponse, 'ai');
                 
@@ -450,8 +426,7 @@
         
         // 頁面加載時顯示初始對話
         document.addEventListener('DOMContentLoaded', function() {
-            const userQuery = localStorage.getItem('userQuery') || '請為我規劃澳門科學之旅';
-            
+            const userQuery = localStorage.getItem('userQuery') || "為我設計從qidian到zhongdian的最佳路線";
             // 添加初始用戶消息
             addMessage(userQuery, 'user');
         });

@@ -698,12 +698,12 @@
                     <div class="input-section">
                         <div class="input-group">
                             <span class="input-label">起：</span>
-                            <input type="text" class="input-field" placeholder="請輸入起點位置" id="start-input">
+                            <input type="text" class="input-field" placeholder="請輸入起點位置" id="start-input" value=>
                         </div>
                         <div class="divider"></div>
                         <div class="input-group">
                             <span class="input-label">終：</span>
-                            <input type="text" class="input-field" placeholder="請輸入終點位置" id="end-input">
+                            <input type="text" class="input-field" placeholder="請輸入終點位置" id="end-input" value=>
                         </div>
                     </div>
                     <button class="search-btn">
@@ -850,9 +850,11 @@
                 return; // 停止执行
             }
             
+            // 使用特定的消息模板
+            const userMessage = "為我設計從" + startText + "到" + endText + "的最佳路線";
+            
             // 保存用户输入到localStorage，然后跳转到结果页面
-            localStorage.setItem('startQuery', startText);
-            localStorage.setItem('endQuery', endText);
+            localStorage.setItem('userQuery', userMessage);
             window.location.href = 'sousuo.html';
         });
         
@@ -870,9 +872,11 @@
                         return;
                     }
                     
+                    // 使用特定的消息模板
+                    const userMessage = "為我設計從" + startText + "到" + endText + "的最佳路線";
+                    
                     // 保存用户输入到localStorage，然后跳转到结果页面
-                    localStorage.setItem('startQuery', startText);
-                    localStorage.setItem('endQuery', endText);
+                    localStorage.setItem('userQuery', userMessage);
                     window.location.href = 'sousuo.html';
                 }
             });
@@ -889,8 +893,12 @@
                 document.querySelector('#start-input').value = start;
                 document.querySelector('#end-input').value = end;
                 
-                // 触发搜索功能
-                document.querySelector('.search-btn').click();
+                // 使用特定的消息模板
+                const userMessage = "為我設計從" + start + "到" + end + "的最佳路線";
+                
+                // 保存用户输入到localStorage，然后跳转到结果页面
+                localStorage.setItem('userQuery', userMessage);
+                window.location.href = 'sousuo.html';
             });
         });
         
